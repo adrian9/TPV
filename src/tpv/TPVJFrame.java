@@ -12,8 +12,13 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.ImageIcon;
@@ -33,7 +38,7 @@ import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 // Clase frame
-public class TPVJFrame extends JFrame {
+public class TPVJFrame extends JFrame implements WindowListener{
 
     //----------CONSTANTES
     private static final Color AZUL_CLARO = new Color(169, 198, 218);
@@ -45,6 +50,8 @@ public class TPVJFrame extends JFrame {
     private HashMap<String, ProductoPedido> listaPedidos; // Aqui se almacenan los productos pedidos
     private JPanel jPanelListaProductos; // Panel donde van apareciendo los productos de las distintas familias
     private JTable tabla;
+    
+    private Socket clientSocket;
 
     //---------- CONSTRUCTOR
     /**
@@ -53,7 +60,9 @@ public class TPVJFrame extends JFrame {
     public TPVJFrame() {
         super("TPV");
         crearVentana();
+        abrirVentanaEnServidor();
         setVisible(true);
+        addWindowListener(this);
     }
 
     //----------METODOS
@@ -349,5 +358,52 @@ public class TPVJFrame extends JFrame {
 
     public static void main(String[] args) {
         TPVJFrame ventana = new TPVJFrame();
+    }
+
+    private void abrirVentanaEnServidor() {
+        try {
+            clientSocket = new Socket("127.0.0.1", 1234);
+        } 
+        catch (UnknownHostException e){}
+        catch (IOException ex) {}
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+        System.out.println("Ventana abierta");  
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e){
+        try{
+            System.out.println("Cerrando");
+            clientSocket.close();
+        }
+        catch (IOException ex){}
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+        System.out.println("Ventana iconificada");
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+        System.out.println("Ventana desiconificada");
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+        System.out.println("Ventana activa");
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
+        System.out.println("Ventana minimizada");
     }
 }
