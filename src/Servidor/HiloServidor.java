@@ -20,6 +20,9 @@ public class HiloServidor extends Thread {
 
     private ServerSocket serverSocket;
     private CTPV ctpv;
+    
+    public static int clientesAbiertos = 1;
+    private int clientesTotales = 1;
 
     public HiloServidor(CTPV ctpv) {
         try {
@@ -36,12 +39,21 @@ public class HiloServidor extends Thread {
         try {
 
             while (true) {
-                //Aceptamos la conexión y lanzamos el hilo que generará la ventana del TPVCliente en CTPV
-                Socket socketCliente = serverSocket.accept();
-                new HiloVentana(socketCliente, ctpv).start();
+                if (clientesAbiertos<=6){
+                    //Aceptamos la conexión y lanzamos el hilo que generará la ventana del TPVCliente en CTPV
+                    Socket socketCliente = serverSocket.accept();
+                    new HiloVentana(socketCliente, ctpv, clientesTotales).start();
+                    System.out.println("Clientes abiertos=" +clientesAbiertos);
+                    sumarVentanas();
+                }
             }
         } catch (IOException ex) {
         }
+    }
+    
+    private void sumarVentanas(){
+        clientesAbiertos++;
+        clientesTotales++;
     }
 
     @Override

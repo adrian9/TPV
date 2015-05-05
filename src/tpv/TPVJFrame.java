@@ -5,6 +5,7 @@
  */
 package tpv;
 
+import Servidor.HiloServidor;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -59,10 +60,15 @@ public class TPVJFrame extends JFrame implements WindowListener{
      */
     public TPVJFrame() {
         super("TPV");
-        crearVentana();
-        abrirVentanaEnServidor();
-        setVisible(true);
-        addWindowListener(this);
+        System.out.println("Clientes Abiertossssss: "+HiloServidor.clientesAbiertos);
+        if(HiloServidor.clientesAbiertos<6){
+            
+            crearVentana();
+            abrirVentanaEnServidor();
+            setVisible(true);
+            addWindowListener(this);
+        }
+        
     }
 
     //----------METODOS
@@ -378,6 +384,7 @@ public class TPVJFrame extends JFrame implements WindowListener{
         try{
             System.out.println("Cerrando");
             clientSocket.close();
+            HiloServidor.clientesAbiertos--;
         }
         catch (IOException ex){}
     }

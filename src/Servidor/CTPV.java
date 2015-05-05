@@ -5,9 +5,12 @@
  */
 package Servidor;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
@@ -24,6 +27,7 @@ public class CTPV extends javax.swing.JFrame {
      */
     public CTPV() {
         initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("../imagenesCTPV/TPV.png")).getImage());
     }
 
     /**
@@ -40,19 +44,20 @@ public class CTPV extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("CTPV");
+        setExtendedState(1);
+        setIconImage(getIconImage());
         setMinimumSize(new java.awt.Dimension(1024, 700));
 
         jDesktopPane1.setBackground(new java.awt.Color(204, 204, 204));
         jDesktopPane1.setMaximumSize(new java.awt.Dimension(1024, 700));
         jDesktopPane1.setMinimumSize(new java.awt.Dimension(1024, 700));
-        jDesktopPane1.setPreferredSize(new java.awt.Dimension(1024, 700));
-        jDesktopPane1.setLayout(new java.awt.FlowLayout());
+        jDesktopPane1.setLayout(new java.awt.GridLayout(2, 3));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1024, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 1024, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanelCabron, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -61,8 +66,8 @@ public class CTPV extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jDesktopPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(104, 104, 104)
+                .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 700, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanelCabron, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
@@ -99,7 +104,8 @@ public class CTPV extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                CTPV ctpv = new CTPV();                      
+                CTPV ctpv = new CTPV();
+                ctpv.setExtendedState(MAXIMIZED_BOTH);
                 ctpv.setVisible(true);              
                 //Lanzamos el hilo que escuchará las peticiones de TPV clientes
                 new HiloServidor(ctpv).start();
@@ -121,11 +127,5 @@ public class CTPV extends javax.swing.JFrame {
     //Función para actualizar el panel
     public void updateUI(){
         updateUI();
-    }
-    
-    //Función que mostrará una ventana indicando que se ha cerrado el TPV cliente
-    public void showMessage(){
-        JOptionPane.showMessageDialog(null, "Cliente atendido", "TPV Cerrado", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
+    }  
 }

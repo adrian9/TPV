@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -18,16 +19,20 @@ public class HiloVentana extends Thread {
 
     private Socket clientSocket;
     private CTPV ctpv;
+    private int numVentana;
 
-    public HiloVentana(Socket clientSocket, CTPV ctpv) {
+    public HiloVentana(Socket clientSocket, CTPV ctpv, int numVentana) {
         this.clientSocket = clientSocket;
         this.ctpv = ctpv;
+        this.numVentana = numVentana;
     }
 
     public void run() {
         //Creamos una ventana "modelo" de TPVClientes, la hacemos visible, y la añadimos al panel del CTPV
         TPVClientes tPVClientes = new TPVClientes();
+        tPVClientes.setTitle("TPV "+numVentana);
         tPVClientes.setVisible(true);
+        tPVClientes.repaint();
         ctpv.getjDesktopPane1().add(tPVClientes);
         while (true) {
             try {
@@ -37,11 +42,13 @@ public class HiloVentana extends Thread {
                     if (clientSocket.getInputStream().read() == -1) {
                         //Si el cliente ha cerrado el socket, lo cerramos 
                         clientSocket.close();
+                        JOptionPane.showMessageDialog(tPVClientes, "Cliente atendido", "TPV Cerrado", JOptionPane.INFORMATION_MESSAGE);
                         //Quitamos el TPV del CTPV
                         tPVClientes.setVisible(false);
                         ctpv.getjDesktopPane1().remove(tPVClientes);
                         //Mostramos el mensaje de cliente atendido por pantalla
-                        ctpv.showMessage();
+                        //tPVClientes.showMessage();
+                        
                         //Actualizamos los componentes del panel
                         ctpv.updateUI();
                     }
