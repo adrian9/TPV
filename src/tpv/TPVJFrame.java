@@ -16,12 +16,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 
 import javax.swing.JButton;
@@ -60,14 +63,10 @@ public class TPVJFrame extends JFrame implements WindowListener{
      */
     public TPVJFrame() {
         super("TPV");
-        System.out.println("Clientes Abiertossssss: "+HiloServidor.clientesAbiertos);
-        if(HiloServidor.clientesAbiertos<6){
-            
             crearVentana();
             abrirVentanaEnServidor();
             setVisible(true);
             addWindowListener(this);
-        }
         
     }
 
@@ -347,6 +346,14 @@ public class TPVJFrame extends JFrame implements WindowListener{
         BigDecimal big = new BigDecimal(val);
         big = big.setScale(2, RoundingMode.HALF_UP);
         jLabelTotal.setText("" + big);
+        System.out.println("TOTAL: "+big);
+        try {
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.println(""+big);
+        } catch (IOException ex) {
+            Logger.getLogger(TPVJFrame.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }
     }
 
     private void eliminar() {
