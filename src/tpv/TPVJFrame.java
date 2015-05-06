@@ -346,10 +346,9 @@ public class TPVJFrame extends JFrame implements WindowListener{
         BigDecimal big = new BigDecimal(val);
         big = big.setScale(2, RoundingMode.HALF_UP);
         jLabelTotal.setText("" + big);
-        System.out.println("TOTAL: "+big);
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(""+big);
+            out.println(" "+big);
         } catch (IOException ex) {
             Logger.getLogger(TPVJFrame.class.getName()).log(Level.SEVERE, null, ex);
             

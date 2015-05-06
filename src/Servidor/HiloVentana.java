@@ -56,7 +56,6 @@ public class HiloVentana extends Thread {
                     }else{
                         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                         String inputLine = in.readLine();
-                        System.out.println(inputLine);
                         tPVClientes.jLabelPrecio.setText(inputLine);
                     }
                 }

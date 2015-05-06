@@ -5,11 +5,11 @@
  */
 package Servidor;
 
-import java.awt.Color;
-import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.border.Border;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -76,11 +76,7 @@ public class TPVClientes extends javax.swing.JInternalFrame {
         jLabelPrecio.setMaximumSize(new java.awt.Dimension(500, 112));
         jLabelPrecio.setMinimumSize(new java.awt.Dimension(500, 112));
         jLabelPrecio.setPreferredSize(new java.awt.Dimension(500, 112));
-        jLabelPrecio.setHorizontalAlignment(SwingConstants.RIGHT);
-        // create a line border with the specified color and width
-	        Border border = BorderFactory.createLineBorder(Color.BLUE, 5);
-	        jLabelPrecio.setBorder(border);
-        
+        jLabelPrecio.setHorizontalAlignment(SwingConstants.RIGHT);     
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -99,7 +95,18 @@ public class TPVClientes extends javax.swing.JInternalFrame {
             jPanelTablaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 0, Short.MAX_VALUE)
         );
+        modeloTabla = new DefaultTableModel();
 
+        //Añadimos las columnas a la tabla
+        modeloTabla.addColumn("Productos");
+        modeloTabla.addColumn("Cantidad");
+        modeloTabla.addColumn("Sub-total");
+
+        tabla = new JTable(modeloTabla); // Añadimos el modelo a la tabla
+        //Panel deslizante por si la tabla contiene muchos elementos
+        JScrollPane jPanelScroll = new JScrollPane();
+        jPanelScroll.setViewportView(tabla); // Metemos tabla en el panel
+        jPanelTabla.add(jPanelScroll);
         jPanelTotal.setBorder(javax.swing.BorderFactory.createTitledBorder("Total Ticket"));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
@@ -172,4 +179,6 @@ public class TPVClientes extends javax.swing.JInternalFrame {
     public javax.swing.JLabel jLabelPrecio;
     public javax.swing.JPanel jPanelTabla;
     public javax.swing.JPanel jPanelTotal;
+    private JTable tabla;
+    private DefaultTableModel modeloTabla;
 }
