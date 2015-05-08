@@ -15,7 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -42,7 +44,7 @@ import javax.swing.table.DefaultTableModel;
 
 @SuppressWarnings("serial")
 // Clase frame
-public class TPVJFrame extends JFrame implements WindowListener{
+public class TPVJFrame extends JFrame implements WindowListener {
 
     //----------CONSTANTES
     private static final Color AZUL_CLARO = new Color(169, 198, 218);
@@ -54,7 +56,7 @@ public class TPVJFrame extends JFrame implements WindowListener{
     private HashMap<String, ProductoPedido> listaPedidos; // Aqui se almacenan los productos pedidos
     private JPanel jPanelListaProductos; // Panel donde van apareciendo los productos de las distintas familias
     private JTable tabla;
-    
+
     private Socket clientSocket;
 
     //---------- CONSTRUCTOR
@@ -63,11 +65,11 @@ public class TPVJFrame extends JFrame implements WindowListener{
      */
     public TPVJFrame() {
         super("TPV");
-            crearVentana();
-            abrirVentanaEnServidor();
-            setVisible(true);
-            addWindowListener(this);
-        
+        crearVentana();
+        abrirVentanaEnServidor();
+        setVisible(true);
+        addWindowListener(this);
+
     }
 
     //----------METODOS
@@ -308,16 +310,15 @@ public class TPVJFrame extends JFrame implements WindowListener{
         int cantidad = 1;
         float total = precio;
         if (listaPedidos.containsKey(nombre)) {
-            if(nombre.equals(nombre)){
+            if (nombre.equals(nombre)) {
                 total = listaPedidos.get(nombre).getTotal() + precio;
             }
             cantidad = listaPedidos.get(nombre).getCantidad() + 1;
         }
         ProductoPedido nuevoPedido;
-        if(nombre.equals("Otros")){
-            nuevoPedido= new ProductoOtros(nombre, precio, cantidad, total);
-        }
-        else{
+        if (nombre.equals("Otros")) {
+            nuevoPedido = new ProductoOtros(nombre, precio, cantidad, total);
+        } else {
             nuevoPedido = new ProductoPedido(nombre, precio, cantidad);
         }
         listaPedidos.put(nombre, nuevoPedido);
@@ -331,10 +332,29 @@ public class TPVJFrame extends JFrame implements WindowListener{
         for (int i = a; i >= 0; i--) {
             modeloTabla.removeRow(i);
         }
+        try {
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.println(" [REINICIAR]");
+        } catch (IOException ex) {
+            Logger.getLogger(TPVJFrame.class.getName()).log(Level.SEVERE, null, ex);
+
+        }
+
+        System.out.println("--->" + listaPedidos.keySet());
 
         for (String string : listaPedidos.keySet()) {
             modeloTabla.addRow(listaPedidos.get(string).getProducto());
+            String pedido = " [PEDIDO]" + listaPedidos.get(string).getNombre() + ";" + listaPedidos.get(string).getCantidad() + ";" + listaPedidos.get(string).getTotal();
+            System.out.println("--->" + pedido);
+            try {
+                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                out.println(pedido);
+            } catch (IOException ex) {
+                Logger.getLogger(TPVJFrame.class.getName()).log(Level.SEVERE, null, ex);
+
+            }
         }
+
     }
 
     public void actualizarTotal() {
@@ -342,16 +362,16 @@ public class TPVJFrame extends JFrame implements WindowListener{
         for (String string : listaPedidos.keySet()) {
             total += listaPedidos.get(string).getTotal();
         }
-        String val = total +"";
+        String val = total + "";
         BigDecimal big = new BigDecimal(val);
         big = big.setScale(2, RoundingMode.HALF_UP);
         jLabelTotal.setText("" + big);
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-            out.println(" "+big);
+            out.println(" [TOTAL]" + big);
         } catch (IOException ex) {
             Logger.getLogger(TPVJFrame.class.getName()).log(Level.SEVERE, null, ex);
-            
+
         }
     }
 
@@ -363,8 +383,8 @@ public class TPVJFrame extends JFrame implements WindowListener{
         actualizarTabla();
         actualizarTotal();
     }
-    
-    private void crearCalculadora (){
+
+    private void crearCalculadora() {
         Calculadora calculadora = new Calculadora(this);
     }
 
@@ -375,24 +395,42 @@ public class TPVJFrame extends JFrame implements WindowListener{
     private void abrirVentanaEnServidor() {
         try {
             clientSocket = new Socket("127.0.0.1", 1234);
-        } 
-        catch (UnknownHostException e){}
-        catch (IOException ex) {}
+        } catch (UnknownHostException e) {
+        } catch (IOException ex) {
+        }
     }
 
     @Override
     public void windowOpened(WindowEvent e) {
-        System.out.println("Ventana abierta");  
+        
+        System.out.println("Ventana abierta");
+        
+        try {
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.println(" [ABRIR]");
+            
+//               BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//               String inputLine = in.readLine();
+//               if (inputLine.equals("[KO]")){
+//                   JOptionPane.showMessageDialog(null, "El servidor no admite más conexiones", "Cerrando cliente", JOptionPane.INFORMATION_MESSAGE);
+//               }
+                        
+                     
+        } catch (IOException ex) {
+            Logger.getLogger(TPVJFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
-    public void windowClosing(WindowEvent e){
-        try{
-            System.out.println("Cerrando");
+    public void windowClosing(WindowEvent e) {
+        System.out.println("Cerrando");
+        try {
+            PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+            out.println(" [CERRAR]");
             clientSocket.close();
-            HiloServidor.clientesAbiertos--;
+        } catch (IOException ex) {
+            Logger.getLogger(TPVJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (IOException ex){}
     }
 
     @Override

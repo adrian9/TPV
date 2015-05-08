@@ -8,10 +8,12 @@ package Servidor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -32,7 +34,7 @@ public class HiloVentana extends Thread {
     public void run() {
         //Creamos una ventana "modelo" de TPVClientes, la hacemos visible, y la añadimos al panel del CTPV
         TPVClientes tPVClientes = new TPVClientes();
-        tPVClientes.setTitle("TPV "+numVentana);
+        tPVClientes.setTitle("TPV " + numVentana);
         tPVClientes.setVisible(true);
         tPVClientes.repaint();
         ctpv.getjDesktopPane1().add(tPVClientes);
@@ -50,13 +52,44 @@ public class HiloVentana extends Thread {
                         ctpv.getjDesktopPane1().remove(tPVClientes);
                         //Mostramos el mensaje de cliente atendido por pantalla
                         //tPVClientes.showMessage();
-                        
+
                         //Actualizamos los componentes del panel
                         ctpv.updateUI();
-                    }else{
+                    } else {
+
                         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                         String inputLine = in.readLine();
-                        tPVClientes.jLabelPrecio.setText(inputLine);
+                        if (inputLine.startsWith("[TOTAL]")) {
+                            tPVClientes.getLbl_total().setText(inputLine.replace("[TOTAL]", ""));
+                        } else if (inputLine.startsWith("[PEDIDO]")) {
+                            boolean esta = false;
+
+                            String[] partes = inputLine.replace("[PEDIDO]", "").split(";");
+
+                            for (int i = 0; i < tPVClientes.getjTable1().getModel().getRowCount(); i++) {
+                                String valorColumna = (String) ((DefaultTableModel) tPVClientes.getjTable1().getModel()).getValueAt(i, 0);
+                                System.out.println("S-->" + valorColumna);
+                                System.out.println("S-->" + partes[0]);
+                                esta = esta || valorColumna.equals(partes[0]);
+                            }
+                            if (!esta) {
+                                ((DefaultTableModel) tPVClientes.getjTable1().getModel()).addRow(partes);
+                            }
+                        } else if (inputLine.startsWith("[REINICIAR]")) {
+                            for (int i = 0; i < tPVClientes.getjTable1().getModel().getRowCount(); i++) {
+                                ((DefaultTableModel) tPVClientes.getjTable1().getModel()).removeRow(i);
+                            }
+
+                        } else if (inputLine.startsWith("[CERRAR]")) {
+                            ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()-1);
+                        } else if (inputLine.startsWith("[ABRIR]")) {
+                            if (ctpv.getClientesAbiertos()+1 <6){
+                                ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()+1);
+                            }else{
+                                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+                                out.println(" [KO]");
+                            }
+                        }
                     }
                 }
             } catch (IOException ex) {

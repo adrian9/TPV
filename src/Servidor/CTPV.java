@@ -22,6 +22,27 @@ public class CTPV extends javax.swing.JFrame {
 
     private HiloServidor hiloServidor;
     
+     
+    private int clientesAbiertos = 1;
+    private int clientesTotales = 1;
+
+    public int getClientesAbiertos() {
+        return clientesAbiertos;
+    }
+
+    public void setClientesAbiertos(int clientesAbiertos) {
+        this.clientesAbiertos = clientesAbiertos;
+    }
+
+    public int getClientesTotales() {
+        return clientesTotales;
+    }
+
+    public void setClientesTotales(int clientesTotales) {
+        this.clientesTotales = clientesTotales;
+    }
+    
+    
     /**
      * Creates new form CTPV
      */
@@ -126,6 +147,6 @@ public class CTPV extends javax.swing.JFrame {
     
     //Función para actualizar el panel
     public void updateUI(){
-        updateUI();
+        jDesktopPane1.updateUI();
     }  
 }
