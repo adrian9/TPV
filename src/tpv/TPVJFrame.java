@@ -402,20 +402,20 @@ public class TPVJFrame extends JFrame implements WindowListener {
 
     @Override
     public void windowOpened(WindowEvent e) {
-        
+
         System.out.println("Ventana abierta");
-        
+
         try {
             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
             out.println(" [ABRIR]");
-            
-//               BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-//               String inputLine = in.readLine();
-//               if (inputLine.equals("[KO]")){
-//                   JOptionPane.showMessageDialog(null, "El servidor no admite más conexiones", "Cerrando cliente", JOptionPane.INFORMATION_MESSAGE);
-//               }
-                        
-                     
+//            while (clientSocket.getInputStream().read() != -1) {
+//                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+//                String inputLine = in.readLine();
+//                if (inputLine.equals("[KO]")) {
+//                    JOptionPane.showMessageDialog(null, "El servidor no admite más conexiones", "Cerrando cliente", JOptionPane.INFORMATION_MESSAGE);
+//                }
+//            }
+
         } catch (IOException ex) {
             Logger.getLogger(TPVJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -46,11 +46,12 @@ public class HiloVentana extends Thread {
                     if (clientSocket.getInputStream().read() == -1) {
                         //Si el cliente ha cerrado el socket, lo cerramos 
                         clientSocket.close();
+                        //Mostramos el mensaje de cliente atendido por pantalla
                         JOptionPane.showMessageDialog(tPVClientes, "Cliente atendido", "TPV Cerrado", JOptionPane.INFORMATION_MESSAGE);
                         //Quitamos el TPV del CTPV
                         tPVClientes.setVisible(false);
                         ctpv.getjDesktopPane1().remove(tPVClientes);
-                        //Mostramos el mensaje de cliente atendido por pantalla
+                        
                         //tPVClientes.showMessage();
 
                         //Actualizamos los componentes del panel
@@ -85,9 +86,11 @@ public class HiloVentana extends Thread {
                         } else if (inputLine.startsWith("[ABRIR]")) {
                             if (ctpv.getClientesAbiertos()+1 <6){
                                 ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()+1);
+                                ctpv.setClientesTotales(ctpv.getClientesTotales()+1);
                             }else{
                                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                                 out.println(" [KO]");
+                                System.out.println("[KO]");
                             }
                         }
                     }

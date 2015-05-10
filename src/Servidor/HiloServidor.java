@@ -45,7 +45,8 @@ public class HiloServidor extends Thread {
                     Socket socketCliente = serverSocket.accept();
                     new HiloVentana(socketCliente, ctpv, ctpv.getClientesTotales()).start();
                     System.out.println("Clientes abiertos=" +ctpv.getClientesAbiertos());
-                    sumarVentanas();
+                    System.out.println("Clientes totales=" +ctpv.getClientesTotales());
+                    //sumarVentanas();
                 }
             }
         } catch (IOException ex) {

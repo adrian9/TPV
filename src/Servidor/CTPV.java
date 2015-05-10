@@ -5,14 +5,8 @@
  */
 package Servidor;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
-import javax.swing.JOptionPane;
 
 /**
  *
