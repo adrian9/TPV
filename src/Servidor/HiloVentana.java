@@ -84,14 +84,14 @@ public class HiloVentana extends Thread {
                         } else if (inputLine.startsWith("[CERRAR]")) {
                             ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()-1);
                         } else if (inputLine.startsWith("[ABRIR]")) {
-                            if (ctpv.getClientesAbiertos()+1 <6){
-                                ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()+1);
-                                ctpv.setClientesTotales(ctpv.getClientesTotales()+1);
-                            }else{
-                                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                                out.println(" [KO]");
-                                System.out.println("[KO]");
-                            }
+//                            if (ctpv.getClientesAbiertos()+1 <6){
+//                                ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()+1);
+//                                ctpv.setClientesTotales(ctpv.getClientesTotales()+1);
+//                            }else{
+//                                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+//                                out.println(" [KO]");
+//                                System.out.println("[KO]");
+//                            }
                         }
                     }
                 }

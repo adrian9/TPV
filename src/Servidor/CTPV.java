@@ -15,10 +15,24 @@ import javax.swing.JDesktopPane;
 public class CTPV extends javax.swing.JFrame {
 
     private HiloServidor hiloServidor;
+    private int clientesAbiertos;
+    private int clientesTotales;
+    public boolean bandera;
     
-     
-    private int clientesAbiertos = 1;
-    private int clientesTotales = 1;
+    /**
+     * Creates new form CTPV
+     */
+    public CTPV() {
+        initComponents();
+        setIconImage(new ImageIcon(getClass().getResource("../imagenesCTPV/TPV.png")).getImage());
+        clientesAbiertos = clientesTotales = 1;
+        bandera = true;
+    }
+
+     public void restaContador() { 
+         clientesAbiertos--; 
+         bandera = true;
+     }
 
     public int getClientesAbiertos() {
         return clientesAbiertos;
@@ -36,15 +50,6 @@ public class CTPV extends javax.swing.JFrame {
         this.clientesTotales = clientesTotales;
     }
     
-    
-    /**
-     * Creates new form CTPV
-     */
-    public CTPV() {
-        initComponents();
-        setIconImage(new ImageIcon(getClass().getResource("../imagenesCTPV/TPV.png")).getImage());
-    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

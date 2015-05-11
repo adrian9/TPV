@@ -20,15 +20,17 @@ import javax.swing.JOptionPane;
 public class HiloServidor extends Thread {
 
     private ServerSocket serverSocket;
-    private CTPV ctpv;
-   
+    private CTPV ctpv;    
+    
+
     
     
 
     public HiloServidor(CTPV ctpv) {
         try {
             this.ctpv = ctpv;
-            serverSocket = new ServerSocket(1234);
+            serverSocket = new ServerSocket(1234); this.ctpv = ctpv;
+           
         } catch (IOException ex) {
             Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -37,27 +39,43 @@ public class HiloServidor extends Thread {
     
     //Función que nos permitirá escuchar las conexiones de los clientes
     private void escucharPeticiones() {
+        
+   
+        
         try {
-
             while (true) {
                 if (ctpv.getClientesAbiertos()<=6){
                     //Aceptamos la conexión y lanzamos el hilo que generará la ventana del TPVCliente en CTPV
                     Socket socketCliente = serverSocket.accept();
+                    // Aumentar contador
+                    ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()+1);                    
                     new HiloVentana(socketCliente, ctpv, ctpv.getClientesTotales()).start();
                     System.out.println("Clientes abiertos=" +ctpv.getClientesAbiertos());
                     System.out.println("Clientes totales=" +ctpv.getClientesTotales());
                     //sumarVentanas();
+                } else {
+                    if (ctpv.bandera) {
+                        JOptionPane.showMessageDialog(ctpv, "No es posible visualizar mas TPV");
+                        ctpv.bandera = false;                        
+                    }
+                        
                 }
+                Thread.sleep(1000);
+                    
             }
         } catch (IOException ex) {
+        } catch (InterruptedException ex) {
+            Logger.getLogger(HiloServidor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private void sumarVentanas(){
-        ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()+1);
-        ctpv.setClientesTotales(ctpv.getClientesTotales()+1);
-    }
+//    private void sumarVentanas(){
+//        ctpv.setClientesAbiertos(ctpv.getClientesAbiertos()+1);
+//        ctpv.setClientesTotales(ctpv.getClientesTotales()+1);
+//    }
 
+   
+    
     @Override
     public void run() {
         escucharPeticiones();
